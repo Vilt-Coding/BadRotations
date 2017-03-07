@@ -1,4 +1,4 @@
-local rotationName = "Brewmaster"
+local rotationName = "Kuukuu"
 
 ---------------
 --- Toggles ---
@@ -425,7 +425,7 @@ local function runRotation()
                         iB2 = true
                     end
                 -- Ironskin Brew
-                elseif iB2 == true and not iB3 theni 
+                elseif iB2 == true and not iB3 then
                     if cast.ironskinBrew() then 
                         iB3 = true
                     end

@@ -296,6 +296,10 @@ local function runRotation()
                         end
                     end
                 end
+        --Expel Harm
+                if isChecked("Expel Harm") and php <= getValue("Expel Harm") and inCombat and GetSpellCount(115027) >= getOptionValue("Expel Harm Orbs") then
+                    if cast.expelHarm() then return end
+                end
         -- Pot/Stoned
                 if isChecked("Pot/Stoned") and getHP("player") <= getValue("Pot/Stoned") and inCombat then
                     if canUse(5512) then
@@ -349,11 +353,7 @@ local function runRotation()
         -- Fortifying Brew
                 if isChecked("Fortifying Brew") and php <= getValue("Fortifying Brew") and inCombat then
                     if cast.fortifyingBrew() then return end
-                end
-        --Expel Harm
-                if isChecked("Expel Harm") and php <= getValue("Expel Harm") and inCombat and GetSpellCount(115027) >= getOptionValue("Expel Harm Orbs") then
-                    if cast.expelHarm() then return end
-                end
+                end        
             end -- End Defensive Check
         end -- End Action List - Defensive
     -- Action List - Interrupts
@@ -468,12 +468,12 @@ local function runRotation()
             end
         -- Blackout Strike
             if cast.blackoutStrike() then return end
-        --Exploding Keg
+        -- Exploding Keg
             if getOptionValue("Artifact") == 1 or (getOptionValue("Artifact") == 2 and useCDs()) and #getEnemies("player",12) >= getOptionValue("Exploding Keg Targets") then
                 if cast.explodingKeg() then return end
             end
         -- RJW AoE
-            if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and talent.rushingJadeWind and #enemies.yards8 >= 2 then
+            if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) then
                 if cast.rushingJadeWind() then return end
             end
         -- TP AoE
@@ -481,7 +481,7 @@ local function runRotation()
                 if cast.tigerPalm() then return end
             end
         -- Tiger Palm ST
-            if not ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and (power + (powgen*cd.kegSmash)) >= 45 then
+            if ((mode.rotation == 1 and #enemies.yards8 < 3) or mode.rotation == 3) and (power + (powgen*cd.kegSmash)) >= 40 then
                 if cast.tigerPalm() then return end
             end
         --Chi Burst
@@ -494,7 +494,7 @@ local function runRotation()
             	if cast.chiWave() then return end
             end
         -- Rushing Jade Wind ST
-            if not ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and talent.rushingJadeWind and #enemies.yards8 >= 1 then
+            if ((mode.rotation == 1 and #enemies.yards8 < 3) or mode.rotation == 3) and #enemies.yards8 >= 1 then
                 if cast.rushingJadeWind() then return end
             end
         -- Breath of Fire
@@ -706,17 +706,21 @@ local function runRotation()
 		            if (charges.purifyingBrew > 1 and not buff.ironskinBrew.exists()) or charges.purifyingBrew == 3 and not buff.blackoutCombo.exists() then
 		                if cast.ironskinBrew() then return end
 		            end
+                -- Potion
                     if canUse(127844) and inRaid and isChecked("Potion") and getDistance("target") < 5 then
                         useItem(127844)
                     end
                     --[[if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) then
                         if actionList_MultiTarget() then return end
                     end]]  
+        -- Blackout Combo APL
                     if talent.blackoutCombo then
                         if actionList_BlackOutCombo() then return end
                     end                                      
-        -- Call Action List - Single Target
-                    -- call_action_list,name=st
+        -- Non-Blackout Combo APL
+                    if not talent.blackoutCombo and ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) then
+                        if actionList_MultiTarget() then return end
+                    end
                     if not talent.blackoutCombo then
                         if actionList_SingleTarget() then return end
                     end

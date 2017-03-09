@@ -473,7 +473,7 @@ local function runRotation()
                 if cast.explodingKeg() then return end
             end
         -- RJW AoE
-            if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and talent.rushingJadeWind and #enemies.yards8 >= 1 then
+            if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and talent.rushingJadeWind and #enemies.yards8 >= 2 then
                 if cast.rushingJadeWind() then return end
             end
         -- TP AoE
@@ -481,7 +481,7 @@ local function runRotation()
                 if cast.tigerPalm() then return end
             end
         -- Tiger Palm ST
-            if not ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and (power + (powgen*cd.kegSmash)) >= 40 then
+            if not ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and (power + (powgen*cd.kegSmash)) >= 45 then
                 if cast.tigerPalm() then return end
             end
         --Chi Burst

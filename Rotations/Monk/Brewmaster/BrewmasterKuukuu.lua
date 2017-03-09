@@ -459,11 +459,11 @@ local function runRotation()
         		if cast.breathOfFire() then return end
         	end]]        
         -- Breath of Fire
-            if buff.blackoutCombo.exists() and not hasEquiped(137016) and #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") then
+            if buff.blackoutCombo.exists() and not hasEquiped(137016) and #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") and debuff.kegSmash.exists(units.dyn5) then
                 if cast.breathOfFire() then return end
             end
         -- Breath of Fire (Legendary Chest)
-            if not buff.blackoutCombo.exists() and hasEquiped(137016) and #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") then
+            if not buff.blackoutCombo.exists() and hasEquiped(137016) and #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") and debuff.kegSmash.exists(units.dyn5) then
                 if cast.breathOfFire() then return end
             end
         -- Blackout Strike
@@ -472,8 +472,16 @@ local function runRotation()
             if getOptionValue("Artifact") == 1 or (getOptionValue("Artifact") == 2 and useCDs()) and #getEnemies("player",12) >= getOptionValue("Exploding Keg Targets") then
                 if cast.explodingKeg() then return end
             end
-        -- Tiger Palm
-            if (power + (powgen*cd.kegSmash)) >= 40 then
+        -- RJW AoE
+            if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and talent.rushingJadeWind and #enemies.yards8 >= 1 then
+                if cast.rushingJadeWind() then return end
+            end
+        -- TP AoE
+            if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and cd.kegSmash >= gcd and (power+(powgen*cd.kegSmash)) >= 80 then
+                if cast.tigerPalm() then return end
+            end
+        -- Tiger Palm ST
+            if not ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and (power + (powgen*cd.kegSmash)) >= 40 then
                 if cast.tigerPalm() then return end
             end
         --Chi Burst
@@ -485,12 +493,12 @@ local function runRotation()
         	if talent.chiWave then
             	if cast.chiWave() then return end
             end
-        -- Rushing Jade Wind
-            if #enemies.yards8 >= 1 then
+        -- Rushing Jade Wind ST
+            if not ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) and talent.rushingJadeWind and #enemies.yards8 >= 1 then
                 if cast.rushingJadeWind() then return end
             end
         -- Breath of Fire
-        	--[[if #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") then
+        	--[[if #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") and debuff.kegSmash.exists(units.dyn5) then
         		if cast.breathOfFire() then return end
         	end]]        
         -- Expel Harm
@@ -515,7 +523,7 @@ local function runRotation()
             end
         --Breath of Fire
             --actions.st+=/breath_of_fire
-            if #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") then
+            if #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") and debuff.kegSmash.exists(units.dyn5) then
             	if cast.breathOfFire() then return end
             end
         -- Blackout Strike
@@ -529,7 +537,7 @@ local function runRotation()
         --Exploding Keg
             --actions.st+=/exploding_keg
             if getOptionValue("Artifact") == 1 or (getOptionValue("Artifact") == 2 and useCDs()) and #getEnemies("player",12) >= getOptionValue("Exploding Keg Targets") then
-                if cast.explodingKeg("best",false,#enemies.yards8,8) then return end
+                if cast.explodingKeg() then return end
             end
         --Chi Burst
             --actions.st+=/chi_burst
@@ -562,7 +570,7 @@ local function runRotation()
         --Exploding Keg
             --actions.st+=/exploding_keg
             if getOptionValue("Artifact") == 1 or (getOptionValue("Artifact") == 2 and useCDs()) and #getEnemies("player",12) >= getOptionValue("Exploding Keg Targets") then
-                if cast.explodingKeg("best",false,#enemies.yards8,8) then return end
+                if cast.explodingKeg() then return end
             end
         -- Keg Smash
            -- actions.st=keg_smash
@@ -582,7 +590,7 @@ local function runRotation()
             end
         --Breath of Fire
             --actions.st+=/breath_of_fire
-            if #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") then
+            if #getEnemies("player",12) >= getOptionValue("Breath of Fire Targets") and debuff.kegSmash.exists(units.dyn5) then
             	if cast.breathOfFire() then return end
             end
         --Rushing Jade Wind
@@ -701,9 +709,9 @@ local function runRotation()
                     if canUse(127844) and inRaid and isChecked("Potion") and getDistance("target") < 5 then
                         useItem(127844)
                     end
-                    if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) then
+                    --[[if ((mode.rotation == 1 and #enemies.yards8 >= 3) or mode.rotation == 2) then
                         if actionList_MultiTarget() then return end
-                    end  
+                    end]]  
                     if talent.blackoutCombo then
                         if actionList_BlackOutCombo() then return end
                     end                                      

@@ -703,7 +703,7 @@ local function runRotation()
 		                if cast.blackoxBrew() then return end
 		            end
 		        -- Ironskin Brew
-		            if (charges.purifyingBrew > 1 and not buff.ironskinBrew.exists()) or charges.purifyingBrew == 3 and not buff.blackoutCombo.exists() then
+		            if ((charges.purifyingBrew > 1 and not buff.ironskinBrew.exists()) or charges.purifyingBrew == 3) and not buff.blackoutCombo.exists() then
 		                if cast.ironskinBrew() then return end
 		            end
                 -- Potion

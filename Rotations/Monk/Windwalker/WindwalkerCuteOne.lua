@@ -242,6 +242,7 @@ local function runRotation()
         local ttd               = getTTD(br.player.units(5))
         local ttm               = br.player.power.ttm
         local units             = units or {}
+        local BetterThanWDP, BetterThanFoF, BetterThanSOTW, BetterThanRSK, BetterThanBOK = false, false, false, false, false
 
         units.dyn5 = br.player.units(5)
         enemies.yards5 = br.player.enemies(5)

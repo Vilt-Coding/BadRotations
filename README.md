@@ -104,6 +104,7 @@ Vilt    | Limited |  7.1  |   100% | :white_check_mark:
 author  | support | patch | status |   raidable?
 :------ | :-----: | :---: | -----: | :-----------:
 CuteOne |  Full   | 7.1.5 |   100% | :interrobang:
+THFrost |  Full   | 7.1.5 |   100% | :interrobang:
 
 - Unholy
 
@@ -132,7 +133,6 @@ Dubwub  | Inactive |  7.1  |   100% |   :interrobang:
 
 author   | support  | patch | status |     raidable?
 :------- | :------: | :---: | -----: | :----------------:
-Averykey | Inactive |  7.0  |   100% |   :interrobang:
 CuteOne  |   Full   | 7.1.5 |   100% | :white_check_mark:
 
 - Guardian

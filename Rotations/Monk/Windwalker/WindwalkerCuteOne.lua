@@ -242,7 +242,6 @@ local function runRotation()
         local ttd               = getTTD(br.player.units(5))
         local ttm               = br.player.power.ttm
         local units             = units or {}
-        local BetterThanWDP, BetterThanFoF, BetterThanSOTW, BetterThanRSK, BetterThanBOK = false, false, false, false, false
 
         units.dyn5 = br.player.units(5)
         enemies.yards5 = br.player.enemies(5)
@@ -534,7 +533,7 @@ local function runRotation()
                     if cast.effuse() then return end
                 end
         -- Healing Elixir
-                if isChecked("Healing Elixir") and artifact.healingWinds and php <= getOptionValue("Healing Elixir") then
+                if isChecked("Healing Elixir") and php <= getOptionValue("Healing Elixir") then
                     if cast.healingElixir() then return end
                 end
         -- Leg Sweep

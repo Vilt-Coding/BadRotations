@@ -1,5 +1,6 @@
 -- Function to create and populate table of enemies within a distance from player.
 br.enemy = {}
+local findEnemiesThread = nil
 
 -- Adds Enemies to the enemy table
 local function AddEnemy(thisUnit)
@@ -45,7 +46,7 @@ end
 
 -- Remove Invalid Enemies
 local function DeleteEnemy(thisUnit)
-	if not ObjectExists(thisUnit) or not UnitIsVisible(thisUnit) then
+	if not UnitExists(thisUnit) or not UnitIsVisible(thisUnit) then
 		br.enemy[thisUnit] = nil
 	elseif not isValidUnit(thisUnit) then
 		-- Print("Removing Enemy")
@@ -55,14 +56,64 @@ local function DeleteEnemy(thisUnit)
 	end
 end
 
+-- Check Critter
+local function IsCritter(checkID)
+    local numPets = C_PetJournal.GetNumPets(false)
+    for i=1,numPets do
+        local _, _, _, _, _, _, _, name, _, _, petID = C_PetJournal.GetPetInfoByIndex(i, false)
+        if checkID == petID then return true end
+    end
+    return false
+end
+
+-- Add Pet
+local function AddPet(thisUnit)
+	if br.player ~= nil then 
+		if br.player.petInfo == nil then br.player.petInfo = {} end
+	    local unitCreator = UnitCreator(thisUnit)
+	    if unitCreator == GetObjectWithGUID(UnitGUID("player")) and br.player.petInfo[thisUnit] == nil then
+	    	if not IsCritter(GetObjectID(thisUnit)) then
+		    	br.player.petInfo[thisUnit] = {}
+				local pet 		= br.player.petInfo[thisUnit] 
+				pet.unit 		= thisUnit
+				pet.name 		= UnitName(thisUnit)
+				pet.guid 		= UnitGUID(thisUnit)
+				pet.id 			= GetObjectID(thisUnit)
+			end
+	    end
+	end
+end
+
+-- Update Pet
+local function UpdatePet(thisUnit)
+	if br.player.spell.buffs.demonicEmpowerment ~= nil then
+        demoEmpBuff = UnitBuffID(thisUnit,br.player.spell.buffs.demonicEmpowerment) ~= nil
+    else
+        demoEmpBuff = false
+    end
+    local unitCount = #getEnemies(thisUnit,10) or 0
+    local pet 		= br.player.petInfo[thisUnit]
+    pet.deBuff = demoEmpBuff
+    pet.numEnemies = unitCount
+end
+
+-- Delete Pet
+local function DeletePet(thisUnit)
+	if not UnitExists(thisUnit) or not UnitIsVisible(thisUnit) then
+		br.player.petInfo[thisUnit] = nil
+	else
+		UpdatePet(thisUnit)
+	end
+end
+
 -- Find Enemies
-local function FindEnemy()
+function FindEnemy()
 	-- DEBUG
     local startTime = debugprofilestop()
     br.debug.cpu.enemiesEngine.unitTargets = 0
     br.debug.cpu.enemiesEngine.sanityTargets = 0
     local objectCount = GetObjectCount() 
-	if FireHack ~= nil and objectCount > 0 then --and (enemyCount == 0 or enemyCount < br.debug.cpu.enemiesEngine.sanityTargets) then
+	if FireHack ~= nil and objectCount > 0 then
         for i = 1, objectCount do
 			-- define our unit
             local thisUnit = GetObjectWithIndex(i)
@@ -70,10 +121,13 @@ local function FindEnemy()
             if ObjectIsType(thisUnit, ObjectTypes.Unit) then
                 br.debug.cpu.enemiesEngine.unitTargets = br.debug.cpu.enemiesEngine.unitTargets + 1
 				-- Enemies
-				if ObjectExists(thisUnit) and isValidUnit(thisUnit) and br.enemy[thisUnit] == nil then
+				if UnitExists(thisUnit) and isValidUnit(thisUnit) and br.enemy[thisUnit] == nil then
                     br.debug.cpu.enemiesEngine.sanityTargets = br.debug.cpu.enemiesEngine.sanityTargets + 1
-                    -- Print("Adding Enemy")
 					AddEnemy(thisUnit)
+				end
+				-- Pet Info
+				if UnitExists(thisUnit) then
+					AddPet(thisUnit)
 				end
 			end
 		end
@@ -92,7 +146,14 @@ function EnemiesEngine()
 			DeleteEnemy(k)
 		end
 	end
-	FindEnemy()
+	if br.player ~= nil then
+		if br.player.petInfo ~= nil then
+			for k, v in pairs(br.player.petInfo) do
+				DeletePet(k)
+			end
+		end
+	end
+	-- FindEnemy()
 end
 
 -- returns prefered target for diferent spells
@@ -102,9 +163,9 @@ function dynamicTarget(range,facing)
 		local bestUnitCoef = 0
 		local bestUnit = "target"
 		for k, v in pairs(br.enemy) do
-			local thisUnit = br.enemy[k]
+			local thisUnit = v--br.enemy[k]
 			local thisDistance = getDistance("player",thisUnit.unit)
-			if GetObjectExists(thisUnit.unit) and ObjectID(thisUnit.unit) ~= 103679 and thisUnit.coeficient ~= nil then
+			if UnitExists(thisUnit.unit) and ObjectID(thisUnit.unit) ~= 103679 and thisUnit.coeficient ~= nil then
 				if (not getOptionCheck("Safe Damage Check") or thisUnit.safe) and not thisUnit.isCC
 					and thisDistance < range and (not facing or thisUnit.facing)
 				then
@@ -270,7 +331,6 @@ function getEnemiesInRect(width,length,showLines)
 	-- Far Right
 	local frX, frY, frZ = GetPositionFromPosition(nrX, nrY, nrZ, length, facing + math.rad(0), 0)
 
-
 	if showLines then
 		-- Near Left
 		LibDraw.Line(nlX, nlY, nlZ, playerX, playerY, playerZ)
@@ -291,9 +351,9 @@ function getEnemiesInRect(width,length,showLines)
 	local maxY = math.max(nrY,nlY,frY,flY)
 	local minY = math.min(nrY,nlY,frY,flY)
 	local objectCount = GetObjectCount() or 0
-	for i = 1, objectCount do
-		local thisUnit = GetObjectWithIndex(i)
-		if ObjectIsType(thisUnit, ObjectTypes.Unit) and isValidTarget(thisUnit) and (UnitIsEnemy(thisUnit,"player") or isDummy(thisUnit)) then
+	for i = 1, #enemiesTable do --objectCount do
+		local thisUnit = enemiesTable[i] --GetObjectWithIndex(i)
+		-- if ObjectIsType(thisUnit, ObjectTypes.Unit) and isValidTarget(thisUnit) and (UnitIsEnemy(thisUnit,"player") or isDummy(thisUnit)) then
 			local tX, tY, tZ = GetObjectPosition(thisUnit)
 			if isInside(tX,tY,nlX,nlY,nrX,nrY,frX,frY) then
 				if showLines then
@@ -301,7 +361,7 @@ function getEnemiesInRect(width,length,showLines)
 				end
 				enemyCounter = enemyCounter + 1
 			end
-		end
+		-- end
 	end
 	return enemyCounter
 end
@@ -373,12 +433,16 @@ function getUnitCoeficient(unit,distance,threat,burnValue,shieldValue)
 			end
 			-- if wise target checked, we look for best target by looking to the lowest or highest hp, otherwise we look for target
 			if getOptionCheck("Wise Target") == true then
-				if getOptionValue("Wise Target") == 1 then
+				if getOptionValue("Wise Target") == 1 then 	   -- Highest
 					-- if highest is selected
 					coef = unitHP
-				elseif getOptionValue("Wise Target") == 3 then
+				elseif getOptionValue("Wise Target") == 3 then -- abs Highest
 					coef = UnitHealth(unit)
-				else
+				elseif getOptionValue("Wise Target") == 4 then -- Furthest
+					coef = 100 - distance
+				elseif getOptionValue("Wise Target") == 5 then -- Nearest
+					coef = distance
+				else 										   -- Lowest
 					-- if lowest is selected
 					coef = 100 - unitHP
 				end

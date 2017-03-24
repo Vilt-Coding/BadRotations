@@ -55,8 +55,10 @@ local function createOptions()
             br.ui:createCheckbox(section,"Ghost Wolf")
         -- Feral Lunge
             br.ui:createCheckbox(section,"Feral Lunge")
+        -- Lightning Bolt OOC
+            br.ui:createCheckbox(section,"Lightning Bolt Out of Combat")
         -- Spirit Walk
-            br.ui:createCheckbox(section,"Spirit Walk")
+            br.ui:createCheckbox(section,"Spirit Walk")            
         -- Water Walking
             br.ui:createCheckbox(section,"Water Walking")
         br.ui:checkSectionState(section)
@@ -196,8 +198,9 @@ local function runRotation()
         local ttd                                           = getTTD
         local ttm                                           = br.player.power.ttm
         local units                                         = units or {}
-
+        
         units.dyn8 = br.player.units(8)
+        units.dyn10 = br.player.units(10)
         enemies.yards5 = br.player.enemies(5)
         enemies.yards8 = br.player.enemies(8)
         enemies.yards10 = br.player.enemies(10)
@@ -445,7 +448,7 @@ local function runRotation()
                         if cast.feralLunge("target") then return end
                     end
             -- Lightning Bolt
-                    if getDistance("target") >= 10 and not talent.overcharge
+                    if getDistance("target") >= 10 and isChecked("Lightning Bolt Out of Combat") and not talent.overcharge
                         and (not isChecked("Feral Lunge") or not talent.feralLunge or cd.feralLunge > gcd or not castable.feralLunge)
                     then
                         if cast.lightningBolt("target") then return end
@@ -463,7 +466,7 @@ local function runRotation()
     -- Profile Stop | Pause
         if not inCombat and not hastar and profileStop==true then
             profileStop = false
-        elseif (inCombat and profileStop==true) or pause() or IsMounted() or mode.rotation==4 then
+        elseif (inCombat and profileStop==true) or pause() or IsMounted() or IsFlying() or mode.rotation==4 then
             if buff.furyOfAir.exists() then
                 cast.furyOfAir()
             end
@@ -484,7 +487,7 @@ local function runRotation()
 --------------------------
 --- In Combat Rotation ---
 --------------------------
-            if inCombat and profileStop==false then
+            if inCombat and isValidUnit(units.dyn10) and profileStop==false then
     ------------------------------
     --- In Combat - Interrupts ---
     ------------------------------
@@ -506,10 +509,10 @@ local function runRotation()
                     if isChecked("Feral Lunge") and hasThreat("target") then
                         if cast.feralLunge("target") then return end
                     end
-            -- Start Attack
+            --[[ Start Attack
                     if getDistance("target") < 5 then
                         StartAttack()
-                    end
+                    end]]
             -- Boulderfist
                     -- boulderfist,if=buff.boulderfist.remain()s<gcd|(maelstrom<=50&active_enemies>=3)
                     if buff.boulderfist.remain() < gcd or (power <= 50 and ((mode.rotation == 1 and #enemies.yards5 >= 3) or mode.rotation == 2)) then
@@ -613,12 +616,12 @@ local function runRotation()
                     end
             -- Crash Lightning
                     -- crash_lightning,if=((active_enemies>1|talent.crashing_storm.enabled|talent.boulderfist.enabled)&!set_bonus.tier19_4pc)|feral_spirit.remain()s>5
-                    if (((mode.rotation == 1 and #enemies.yards8 > 1) or talent.crashingStorm or talent.boulderfist or mode.rotation == 2) and not t19pc4) or feralSpiritRemain > 5 then
+                    if (((mode.rotation == 1 and #enemies.yards8 > 1) or --[[talent.crashingStorm or talent.boulderfist or]] mode.rotation == 2) and not t19pc4) or feralSpiritRemain > 5 then
                         if cast.crashLightning() then return end
                     end
             -- Frostbrand
                     -- frostbrand,if=talent.hailstorm.enabled&buff.frostbrand.remain()s<4.8
-                    if talent.hailstorm and buff.frostbrand.remain() < 4.8 then
+                    if talent.hailstorm and buff.frostbrand.refresh then
                         if cast.frostbrand() then return end
                     end
             -- Lava Lash
@@ -631,12 +634,12 @@ local function runRotation()
                         if cast.lavaLash() then return end
                     end
                     -- lava_lash,if=(!set_bonus.tier19_4pc&maelstrom>=120)|(!talent.fury_of_air.enabled&set_bonus.tier19_4pc&maelstrom>=40)
-                    if (not t19pc4 and power >= 120) or (not talent.furyOfAir and t19pc4 and power >= 40) then
+                    if (not t19pc4 and power >= 110) or (not talent.furyOfAir and t19pc4 and power >= 40) then
                         if cast.lavaLash() then return end
                     end
             -- Flametongue
                     -- flametongue,if=buff.flametongue.remain()s<4.8
-                    if buff.flametongue.remain() < 4.8 then
+                    if buff.flametongue.refresh then
                         if cast.flametongue() then return end
                     end
             -- Sundering

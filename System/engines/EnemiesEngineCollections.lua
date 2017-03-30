@@ -72,6 +72,7 @@ shieldedUnitCandidates = {
 	-- Proving Grounds
 	[71072] = { coef = -90, buff = 142427 }, -- Proving ground Sha shielded (will unshield later so better wait)
 	[71064] = { coef = -100, buff = 142174, frontal = true }, -- when shielded and we are in front of unit, dont attack
+	[71079] = { coef = -100, buff = 142174, frontal = true }, -- when shielded and we are in front of unit, dont attack
 }
 --  low prio
 -- doNotTouchUnitCandidates - List of units that we should not attack for any reason
@@ -85,7 +86,9 @@ doNotTouchUnitCandidates = {
     { unitID = 95888, buff = 205004 }, -- Don't attack Cordana Felsong when she casts Vengeance
     { unitID = 95888, buff = 197422 }, -- Don't attack Cordana Felsong when she casts Creeping Doom
     { unitID = 112956, buff = 225840 }, -- Don't attack Shimmering Manaspine
-    { unitID = 104154, buff = 206516 }, -- Don't attack Gul'dan when he is in The Eye of Aman'Thul cage 
+    { unitID = 104154, buff = 206516 }, -- Don't attack Gul'dan when he is in The Eye of Aman'Thul cage
+    -- Nighthold: Mythic Spellblade - Fel Soul
+    { unitID = 115905}, 
 }
 -- list of units to stun, either always or udner certain condition such as having a buff or wirldwinding etc
 crowdControlCandidates = {

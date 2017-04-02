@@ -608,7 +608,7 @@ local function runRotation()
             end
         -- Furious Slash
             -- furious_slash
-            if (useCDs() and cd.battleCry > 0) or not useCDs() and cd.ragingBlow > 0 then
+            if (useCDs() and cd.battleCry > 0) or not (useCDs() and (cd.ragingBlow > 0 or level < 20)) then
                 if cast.furiousSlash() then return end
             end
         end -- End Action List - Single

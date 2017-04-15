@@ -165,15 +165,15 @@ local function runRotation()
         local combatTime                                    = getCombatTime()
         local cd                                            = br.player.cd
         local charges                                       = br.player.charges
-        local deadMouse, hasMouse, playerMouse              = UnitIsDeadOrGhost("mouseover"), ObjectExists("mouseover"), UnitIsPlayer("mouseover")
-        local deadtar, attacktar, hastar, playertar         = UnitIsDeadOrGhost("target"), UnitCanAttack("target", "player"), ObjectExists("target"), UnitIsPlayer("target")
+        local deadMouse, hasMouse, playerMouse              = UnitIsDeadOrGhost("mouseover"), GetObjectExists("mouseover"), UnitIsPlayer("mouseover")
+        local deadtar, attacktar, hastar, playertar         = UnitIsDeadOrGhost("target"), UnitCanAttack("target", "player"), GetObjectExists("target"), UnitIsPlayer("target")
         local debuff                                        = br.player.debuff
         local enemies                                       = enemies or {}
         local falling, swimming, flying, moving             = getFallTime(), IsSwimming(), IsFlying(), GetUnitSpeed("player") > 0
         local flaskBuff                                     = getBuffRemain("player",br.player.flask.wod.buff.agilityBig)
         local friendly                                      = UnitIsFriend("target", "player")
         local gcd                                           = br.player.gcd
-        local hastar                                        = ObjectExists("target")
+        local hastar                                        = GetObjectExists("target")
         local healPot                                       = getHealthPot()
         local inCombat                                      = br.player.inCombat
         local inInstance                                    = br.player.instance=="party"
@@ -229,7 +229,7 @@ local function runRotation()
         local function actionList_Extras()
         -- Dummy Test
             if isChecked("DPS Testing") then
-                if ObjectExists("target") then
+                if GetObjectExists("target") then
                     if getCombatTime() >= (tonumber(getOptionValue("DPS Testing"))*60) and isDummy() then
                         StopAttack()
                         ClearTarget()
@@ -245,7 +245,7 @@ local function runRotation()
                 end
             end
         -- Purge
-            if isChecked("Purge") and canDispel("target",spell.purge) and not isBoss() and ObjectExists("target") then
+            if isChecked("Purge") and canDispel("target",spell.purge) and not isBoss() and GetObjectExists("target") then
                 if cast.purge() then return end
             end
         -- Spirit Walk
@@ -382,14 +382,14 @@ local function runRotation()
                 end
         -- Crash Lightning
                 -- crash_lightning,if=artifact.alpha_wolf.rank&prev_gcd.feral_spirit
-                if artifact.alphaWolf and lastSpell == spell.feralSpirit and getEnemiesInCone(8,120) >= 1 then
+                if artifact.alphaWolf and lastSpell == spell.feralSpirit and getEnemiesInCone(7,100) >= 1 then
                 --#enemies.yards8 > 0 and getFacing("player",units.dyn8,120)
                     if cast.crashLightning() then return end
                 end
         -- Ring of Collapsing Futures
                 -- use_item,slot=finger1,if=buff.temptation.down
                 if isChecked("Ring of Collapsing Futures") then
-                    if hasEquiped(142173) and canUse(142173) and not buff.temptation.exists() then
+                    if hasEquiped(142173) and canUse(142173) and not debuff.temptation.exists("player") then
                         useItem(142173)
                     end
                 end
@@ -511,7 +511,7 @@ local function runRotation()
                         if cast.feralLunge("target") then return end
                     end
             -- Start Attack
-                    if getDistance("target") < 5 then
+                    if getDistance("target") <= 5 then
                         StartAttack()
                     end
             -- Boulderfist
@@ -550,8 +550,8 @@ local function runRotation()
                     end
             -- Crash Lightning
                     -- crash_lightning,if=talent.crashing_storm.enabled&active_enemies>=3&(!talent.hailstorm.enabled|buff.frostbrand.remain()s>gcd)
-                    if ((mode.rotation == 1 and getEnemiesInCone(8,120) >= 3) or mode.rotation == 2) --[[and getFacing("player",units.dyn8,120)]] then
-                        if talent.crashingStorm --[[and #enemies.yards8 > 0]] and (not talent.hailstorm or buff.frostbrand.remain() > gcd) then
+                    if ((mode.rotation == 1 and getEnemiesInCone(7,100) >= 3) or mode.rotation == 2) then
+                        if talent.crashingStorm  and (not talent.hailstorm or buff.frostbrand.remain() > gcd) then
                             if cast.crashLightning() then return end
                         end
                     end
@@ -565,7 +565,7 @@ local function runRotation()
                     end
             -- Crash Lightning
                     -- crash_lightning,if=buff.crash_lightning.remain()s<gcd&active_enemies>=2
-                    if buff.crashLightning.remain() < gcd and ((mode.rotation == 1 and getEnemiesInCone(8,120) >= 2) or mode.rotation == 2) then
+                    if buff.crashLightning.remain() < gcd and ((mode.rotation == 1 and getEnemiesInCone(7,100) >= 2) or mode.rotation == 2) then
                         if cast.crashLightning() then return end
                     end
             -- Windsong
@@ -594,7 +594,7 @@ local function runRotation()
                     end
             -- Crash Lightning
                     -- crash_lightning,if=active_enemies>=4
-                    if ((mode.rotation == 1 and getEnemiesInCone(8,120) >= 4) or mode.rotation == 2) then
+                    if ((mode.rotation == 1 and getEnemiesInCone(7,100) >= 4) or mode.rotation == 2) then
                         if cast.crashLightning() then return end
                     end
             -- Windstrike
@@ -617,7 +617,7 @@ local function runRotation()
                     end
             -- Crash Lightning
                     -- crash_lightning,if=((active_enemies>1|talent.crashing_storm.enabled|talent.boulderfist.enabled)&!set_bonus.tier19_4pc)|feral_spirit.remain()s>5
-                    if (((mode.rotation == 1 and getEnemiesInCone(8,120) > 1) or --[[talent.crashingStorm or talent.boulderfist or]] mode.rotation == 2) and not t19pc4) or (feralSpiritRemain > 5 and artifact.alphaWolf) then
+                    if (((mode.rotation == 1 and getEnemiesInCone(7,100) > 1) or --[[talent.crashingStorm or talent.boulderfist or]] mode.rotation == 2) and not t19pc4) or (feralSpiritRemain > 5 and artifact.alphaWolf) then
                         if cast.crashLightning() then return end
                     end
             -- Frostbrand
@@ -705,7 +705,7 @@ local function runRotation()
                     if cast.stormstrike() then return end
             -- Crash Lightning
                     -- if (HasTalent(CrashingStorm) and TimerSecRemaining(CrashingStormTimer) = 0) or TargetsInRadius(CrashLightning) > 3 or (ArtifactTraitRank(GatheringStorms) > 0 and not HasBuff(GatheringStorms))
-                    if (talent.crashingStorm and crashingStormTimer == 0) or getEnemiesInCone(8,120) > 3 or (artifact.gatheringStorms and not buff.gatheringStorms.exists()) then
+                    if (talent.crashingStorm and crashingStormTimer == 0) or getEnemiesInCone(7,100) > 3 or (artifact.gatheringStorms and not buff.gatheringStorms.exists()) then
                         if cast.crashLightning() then return end
                     end
             -- Flame Tongue

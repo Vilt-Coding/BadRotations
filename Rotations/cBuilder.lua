@@ -695,15 +695,15 @@ function br.loader:new(spec,specName)
     end
 
     function ComboSpend()
-        return math.min(br.player.power.amount.comboPoints, CPMaxSpend())
+        return math.min(br.player.power.amount.comboPoints, ComboMaxSpend())
     end
 
     function mantleDuration()
         if hasEquiped(144236) then
-            if buff.masterAssassinsInitiative.remain() < 0 then
-                mantleDuration = cd.global + 6
+            if br.player.buff.masterAssassinsInitiative.remain() < 0 then
+                mantleDuration = br.player.cd.global + 6
             else
-                mantleDuration = buff.masterAssassinsInitiative.remain()
+                mantleDuration = br.player.buff.masterAssassinsInitiative.remain()
             end
         else
             return 0
@@ -711,7 +711,7 @@ function br.loader:new(spec,specName)
     end
 
     function BleedTarget()
-        return (br.player.debuff.garrote.exists("target") and 1 or 0) + (br.player.debuff.rupture.exists("target") and 1 or 0)
+        return (br.player.debuff.garrote.exists("target") and 1 or 0) + (br.player.debuff.rupture.exists("target") and 1 or 0) + (br.player.debuff.internalBleeding.exists("target") and 1 or 0)
     end
 
 -----------------------------

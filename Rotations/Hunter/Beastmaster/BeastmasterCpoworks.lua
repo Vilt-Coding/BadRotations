@@ -69,6 +69,8 @@ local function createOptions()
             br.ui:createCheckbox(section,"Flask / Crystal")
         -- Racial
             br.ui:createCheckbox(section,"Racial")
+        -- Ring of Collapsing Futures
+            br.ui:createCheckbox(section,"Ring of Collapsing Futures")
         -- Trinkets
             br.ui:createDropdownWithout(section, "Trinkets", {"|cff00FF001st Only","|cff00FF002nd Only","|cffFFFF00Both","|cffFF0000None"}, 1, "|cffFFFFFFSelect Trinket Usage.")
         -- Bestial Wrath
@@ -155,7 +157,7 @@ local function runRotation()
         local charges                                       = br.player.charges
         local deadMouse                                     = UnitIsDeadOrGhost("mouseover")
         local deadPet                                       = deadPet
-        local deadtar, attacktar, hastar, playertar         = deadtar or UnitIsDeadOrGhost("target"), attacktar or UnitCanAttack("target", "player"), hastar or ObjectExists("target"), UnitIsPlayer("target")
+        local deadtar, attacktar, hastar, playertar         = deadtar or UnitIsDeadOrGhost("target"), attacktar or UnitCanAttack("target", "player"), hastar or GetObjectExists("target"), UnitIsPlayer("target")
         local debuff                                        = br.player.debuff
         local enemies                                       = enemies or {}
         local falling, swimming, flying, moving             = getFallTime(), IsSwimming(), IsFlying(), GetUnitSpeed("player")>0
@@ -163,7 +165,7 @@ local function runRotation()
         local flaskBuff                                     = getBuffRemain("player",br.player.flask.wod.buff.agilityBig)
         local friendly                                      = friendly or UnitIsFriend("target", "player")
         local gcd                                           = br.player.gcd
-        local hasMouse                                      = ObjectExists("mouseover")
+        local hasMouse                                      = GetObjectExists("mouseover")
         local healPot                                       = getHealthPot()
         local inCombat                                      = br.player.inCombat
         local inInstance                                    = br.player.instance=="party"
@@ -206,7 +208,7 @@ local function runRotation()
 	-- Action List - Pet Management
         local function actionList_PetManagement()
             if not IsMounted() then
-                if isChecked("Auto Summon") and not UnitExists("pet") and (UnitIsDeadOrGhost("pet") ~= nil or IsPetActive() == false) then
+                if isChecked("Auto Summon") and not GetUnitExists("pet") and (UnitIsDeadOrGhost("pet") ~= nil or IsPetActive() == false) then
                   if waitForPetToAppear ~= nil and waitForPetToAppear < GetTime() - 2 then
                       if deadPet == true then
                         if castSpell("player",982) then return; end
@@ -259,7 +261,7 @@ local function runRotation()
         local function actionList_Extras()
         -- Dummy Test
             if isChecked("DPS Testing") then
-                if ObjectExists("target") then
+                if GetObjectExists("target") then
                     if getCombatTime() >= (tonumber(getOptionValue("DPS Testing"))*60) and isDummy() then
                         StopAttack()
                         ClearTarget()
@@ -329,7 +331,7 @@ local function runRotation()
                 end
             -- Intimidation
                 if isChecked("Intimidation") and talent.intimidation and cd.intimidation == 0 and
-                UnitExists("pet") and (UnitIsDead("pet") ~= nil or UnitIsDead("pet") == false) then
+                GetUnitExists("pet") and (UnitIsDead("pet") ~= nil or UnitIsDead("pet") == false) then
                     for i=1, #enemies.yards40 do
                     thisUnit = enemies.yards40[i]
                         if canInterrupt(thisUnit,getOptionValue("Interrupt At")) then
@@ -577,6 +579,13 @@ local function runRotation()
                         if isChecked("Racial") and (br.player.race == "Orc" or br.player.race == "Troll") then
                              if castSpell("player",racial,false,false,false) then return end
                         end
+                    -- Ring of Collapsing Futures
+                        -- use_item,slot=finger1,if=buff.temptation.down
+                        if isChecked("Ring of Collapsing Futures") then
+                            if hasEquiped(142173) and canUse(142173) and not debuff.temptation.exists("player") then
+                                useItem(142173)
+                            end
+                        end
                     -- Volley
                         if talent.volley and not buff.volley.exists() then
                             if cast.volley() then return end
@@ -598,7 +607,7 @@ local function runRotation()
                             if cast.direBeast(units.dyn40) then return end
                         end
                     -- Dire Frenzy
-                        if talent.direFrenzy and getSpellCD(217200) == 0 and ((cd.bestialWrath > 6 and (not hasEquiped(144326) or buff.direFrenzy.remain("pet") <= (gcd*1.2))) or ttd(units.dyn40) < 9) then
+                        if talent.direFrenzy and getSpellCD(217200) == 0 and ((cd.bestialWrath > 6 and (not hasEquiped(144326) or buff.direFrenzy.remain("pet") <= (gcd*1.2))) or ttd(units.dyn40) < 9) and power < 75 then
                             if cast.direFrenzy(units.dyn40) then return end
                         end
                     -- Aspect of the Wild
@@ -638,7 +647,7 @@ local function runRotation()
                                         end
                                     end
                                 else
-                                    if UnitExists("pet") then
+                                    if GetUnitExists("pet") then
                                       CastSpellByName(GetSpellInfo(34477),"pet")
                                     end
                                 end

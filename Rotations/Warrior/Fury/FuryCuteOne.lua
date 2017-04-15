@@ -188,13 +188,13 @@ local function runRotation()
         local cd                                            = br.player.cd
         local charges                                       = br.player.charges
         local deadMouse                                     = UnitIsDeadOrGhost("mouseover")
-        local deadtar, attacktar, hastar, playertar         = deadtar or UnitIsDeadOrGhost("target"), attacktar or UnitCanAttack("target", "player"), hastar or ObjectExists("target"), UnitIsPlayer("target")
+        local deadtar, attacktar, hastar, playertar         = deadtar or UnitIsDeadOrGhost("target"), attacktar or UnitCanAttack("target", "player"), hastar or GetObjectExists("target"), UnitIsPlayer("target")
         local debuff                                        = br.player.debuff
         local enemies                                       = enemies or {}
         local falling, swimming, flying, moving             = getFallTime(), IsSwimming(), IsFlying(), GetUnitSpeed("player")>0
         local friendly                                      = friendly or UnitIsFriend("target", "player")
         local gcd                                           = br.player.gcd
-        local hasMouse                                      = ObjectExists("mouseover")
+        local hasMouse                                      = GetObjectExists("mouseover")
         local healPot                                       = getHealthPot()
         local heirloomNeck                                  = 122667 or 122668
         local inCombat                                      = br.player.inCombat
@@ -239,7 +239,7 @@ local function runRotation()
         function actionList_Extra()
             -- Dummy Test
             if isChecked("DPS Testing") then
-                if ObjectExists("target") then
+                if GetObjectExists("target") then
                     if getCombatTime() >= (tonumber(getOptionValue("DPS Testing"))*60) and isDummy() then
                         StopAttack()
                         ClearTarget()
@@ -349,7 +349,7 @@ local function runRotation()
                 end
         -- Ring of Collapsing Futures
                 -- use_item,name=ring_of_collapsing_futures,if=equipped.ring_of_collapsing_futures&buff.battle_cry.up&buff.enrage.up&!buff.temptation.up
-                if hasEquiped(142173) and buff.battleCry.exists() and buff.enrage.exists() and not buff.temptation.exists() then
+                if hasEquiped(142173) and buff.battleCry.exists() and buff.enrage.exists() and not debuff.temptation.exists("player") then
                     if canUse(142173) then
                         useItem(142173)
                     end
@@ -496,7 +496,7 @@ local function runRotation()
             end
         -- Whirlwind
             -- whirlwind,if=spell_targets.whirlwind>1&buff.meat_cleaver.down
-            if ((mode.rotation == 1 and #enemies.yards8 > getOptionValue("Whirlwind Units")) or mode.rotation == 2) and not buff.meatCleaver.exists() then
+            if ((mode.rotation == 1 and #enemies.yards8 >= getOptionValue("Whirlwind Units")) or mode.rotation == 2) and not buff.meatCleaver.exists() then
                 if cast.whirlwind() then return end
             end
         -- Execute
@@ -539,7 +539,7 @@ local function runRotation()
             if cast.bloodthirst() then return end
         -- Whirlwind
             -- whirlwind,if=buff.wrecking_ball.react&buff.enrage.up
-            if ((mode.rotation == 1 and #enemies.yards8 > getOptionValue("Whirlwind Units")) or mode.rotation == 2) and buff.wreckingBall.exists() and buff.enrage.exists() then
+            if ((mode.rotation == 1 and #enemies.yards8 >= getOptionValue("Whirlwind Units")) or mode.rotation == 2) and buff.wreckingBall.exists() and buff.enrage.exists() then
                 if cast.whirlwind() then return end
             end
         -- Furious Slash
@@ -560,7 +560,7 @@ local function runRotation()
             end
         -- Whirlwind
             -- whirlwind,if=spell_targets.whirlwind=3&buff.wrecking_ball.react
-            if ((mode.rotation == 1 and #enemies.yards8 > getOptionValue("Whirlwind Units")) or mode.rotation == 2) and buff.wreckingBall.exists() then
+            if ((mode.rotation == 1 and #enemies.yards8 >= getOptionValue("Whirlwind Units")) or mode.rotation == 2) and buff.wreckingBall.exists() then
                 if cast.whirlwind() then return end
             end
         -- Raging Blow
@@ -648,7 +648,7 @@ local function runRotation()
             end
         -- Rampage
             -- rampage,if=buff.meat_cleaver.up&((buff.enrage.down&!talent.frothing_berserker.enabled)|(rage>=100&talent.frothing_berserker.enabled))|buff.massacre.react
-            if (buff.meatCleaver.exists() and ((not buff.enrage.exists() and not talent.frothingBerserker) or (buff.frothingBerserker.exists() and talent.frothingBerserker))) or buff.massacre.exists() then
+            if (buff.meatCleaver.exists() and ((not buff.enrage.exists() and not talent.frothingBerserker) or (buff.frothingBerserker.exists() and talent.frothingBerserker))) or buff.massacre.exists() or power >= 100 then
                 if cast.rampage() then return end
             end
         -- Raging Blow
@@ -661,7 +661,7 @@ local function runRotation()
             if cast.bloodthirst() then return end
         -- Whirlwind
             -- whirlwind
-            if ((mode.rotation == 1 and #enemies.yards8 > getOptionValue("Whirlwind Units")) or mode.rotation == 2) and getDistance(units.dyn8) < 8 then
+            if ((mode.rotation == 1 and #enemies.yards8 >= getOptionValue("Whirlwind Units")) or mode.rotation == 2) and getDistance(units.dyn8) < 8 then
                 if cast.whirlwind() then return end
             end
         end -- End Action List - Three Targets
@@ -687,7 +687,7 @@ local function runRotation()
             end
         -- Whirlwind
             -- whirlwind,if=buff.meat_cleaver.down
-            if ((mode.rotation == 1 and #enemies.yards8 > getOptionValue("Whirlwind Units")) or mode.rotation == 2) and not buff.meatCleaver.exists() and getDistance(units.dyn8) < 8 then
+            if ((mode.rotation == 1 and #enemies.yards8 >= getOptionValue("Whirlwind Units")) or mode.rotation == 2) and not buff.meatCleaver.exists() and getDistance(units.dyn8) < 8 then
                 if cast.whirlwind() then return end
             end
         -- Rampage
@@ -700,7 +700,7 @@ local function runRotation()
             if cast.bloodthirst() then return end
         -- Whirlwind
             -- whirlwind
-            if ((mode.rotation == 1 and #enemies.yards8 > getOptionValue("Whirlwind Units")) or mode.rotation == 2) and getDistance(units.dyn8) < 8 then
+            if ((mode.rotation == 1 and #enemies.yards8 >= getOptionValue("Whirlwind Units")) or mode.rotation == 2) and getDistance(units.dyn8) < 8 then
                 if cast.whirlwind() then return end
             end
         end -- End Action List - MultiTarget

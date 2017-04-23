@@ -311,8 +311,8 @@ local function runRotation()
                 if isChecked("Exhilaration") and php <= getOptionValue("Exhilaration") then
                     if cast.exhilaration("player") then return end
                 end
-        -- Exhilaration
-                if isChecked("Aspect Of The Turtle") and php <= getOptionValue("Aspect Of The Turtle") then
+        -- Aspect of the Turtle
+                if isChecked("Aspect Of The Turtle") and inCombat and php <= getOptionValue("Aspect Of The Turtle") then
                     if cast.aspectOfTheTurtle("player") then return end
                 end
             end -- End Defensive Toggle
@@ -514,6 +514,10 @@ local function runRotation()
                         if cd.bestialWrath > 6 then
                             if cast.direFrenzy(units.dyn40) then return end
                         end
+                -- Aspect of the Wild
+                        if isChecked("Aspect of the Wild") and useCDs() and buff.bestialWrath.exists() or (ttd(units.dyn40) < 12 and isBoss(units.dyn40)) then
+                            if cast.aspectOfTheWild() then return end
+                        end
                 -- Barrage
                         if isChecked("A Murder Of Crows / Barrage") and #multishotTargets > 1 then
                             if cast.barrage(units.dyn40) then return end
@@ -603,15 +607,15 @@ local function runRotation()
                             if cast.stampede(units.dyn40) then return end
                         end
                     -- Dire Beast
-                        if not talent.direFrenzy and cd.bestialWrath > 3 then
+                        if not talent.direFrenzy and (cd.bestialWrath > 3 or cd.bestialWrath <= gcd) then
                             if cast.direBeast(units.dyn40) then return end
                         end
                     -- Dire Frenzy
-                        if talent.direFrenzy and getSpellCD(217200) == 0 and ((cd.bestialWrath > 6 and (not hasEquiped(144326) or buff.direFrenzy.remain("pet") <= (gcd*1.2))) or ttd(units.dyn40) < 9) and power < 75 then
+                        if talent.direFrenzy and getSpellCD(217200) == 0 and (((cd.bestialWrath > 6 or cd.bestialWrath <= gcd) and (not hasEquiped(144326) or buff.direFrenzy.remain("pet") <= (gcd*1.2))) or ttd(units.dyn40) < 9) then
                             if cast.direFrenzy(units.dyn40) then return end
                         end
                     -- Aspect of the Wild
-                        if isChecked("Aspect of the Wild") and useCDs() and buff.bestialWrath.exists() or (ttd(units.dyn40) < 12 and isBoss(units.dyn40)) then
+                        if isChecked("Aspect of the Wild") and useCDs() and buff.bestialWrath.exists() or (ttd(units.dyn40) ~= nil and ttd(units.dyn40) < 12 and isBoss(units.dyn40)) then
                             if cast.aspectOfTheWild() then return end
                         end
                     -- Barrage
@@ -627,13 +631,13 @@ local function runRotation()
                             if cast.bestialWrath() then return end
                         end
                     -- Multi Shot
-                        if #multishotTargets > 4 and (beastCleaveTimer < gcd or beastCleaveTimer == 0) then
+                        if #multishotTargets > 4 and (mode.rotation == 1 or mode.rotation == 2) and (beastCleaveTimer < gcd or beastCleaveTimer == 0) then
                             if cast.multiShot(units.dyn40) then return end
                         end
                     -- Kill Command
                         if cast.killCommand(units.dyn40) then return end
                     -- Multi Shot
-                        if #multishotTargets > 1 and (beastCleaveTimer < (gcd*2) or beastCleaveTimer == 0) then
+                        if #multishotTargets > 1 and (mode.rotation == 1 or mode.rotation == 2) and (beastCleaveTimer < (gcd*2) or beastCleaveTimer == 0) then
                             if cast.multiShot(units.dyn40) then return end
                         end
                       -- Misdirection
@@ -659,7 +663,7 @@ local function runRotation()
                             if cast.chimaeraShot(units.dyn40) then return end
                         end
                     -- Cobra Shot
-                        if (cd.killCommand > ttm and cd.bestialWrath > ttm) or (buff.bestialWrath.exists() and powerRegen* cd.killCommand > 30) or (ttd(units.dyn40) < cd.killCommand) then
+                        if (cd.killCommand > ttm and cd.bestialWrath > ttm) or (buff.bestialWrath.exists() and powerRegen* cd.killCommand > 30) or (ttd(units.dyn40) ~= nil and ttd(units.dyn40) < cd.killCommand) or power >= 70 then
                             if cast.cobraShot(units.dyn40) then return end
                         end
                     end

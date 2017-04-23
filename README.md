@@ -118,13 +118,13 @@ THUnholy | Full    | 7.1.5 |  100%  | :white_check_mark:
 
 author  | support | patch | status |     raidable?
 :------ | :-----: | :---: | -----: | :----------------:
-CuteOne |  Full   | 7.1.5 |   100% | :white_check_mark:
+CuteOne |  Full   | 7.2   |   100% | :white_check_mark:
 
 - Vengeance
 
 author  | support  | patch | status |     raidable?
 :------ | :------: | :---: | -----: | :----------------:
-CuteOne |   Full   |  7.1  |   100% | :white_check_mark:
+CuteOne |   Full   |  7.2  |   100% | :white_check_mark:
 Dubwub  | Inactive |  7.1  |   100% |   :interrobang:
 
 ### Druid
@@ -133,7 +133,7 @@ Dubwub  | Inactive |  7.1  |   100% |   :interrobang:
 
 author   | support  | patch | status |     raidable?
 :------- | :------: | :---: | -----: | :----------------:
-CuteOne  |   Full   | 7.1.5 |   100% | :white_check_mark:
+CuteOne  |   Full   | 7.2   |   100% | :white_check_mark:
 
 - Guardian
 
@@ -160,18 +160,19 @@ Svs    |  Full   | 7.1.5 |   100% | :white_check_mark:
 author   | support  | patch | status |     raidable?
 :------- | :------: | :---: | -----: | :----------------:
 Cpoworks | Sporadic |  7.1  |    70% | :heavy_check_mark:
+Kuukuu   | Full     |  7.2  |    90% | :white_check_mark:
 
 - Marksmanship
 
 author   | support  | patch | status |     raidable?
 :------- | :------: | :---: | -----: | :----------------:
-Cpoworks | Sporadic |  7.1  |    70% | :heavy_check_mark:
+CuteOne  | Sporadic |  7.1  |    70% | :heavy_check_mark:
 
 - Survival
 
 author           |    support    | patch | status |   raidable?
 :--------------- | :-----------: | :---: | -----: | :-----------:
-CuteOne/Cpoworks | Full/Sporadic | 7.1.5 |    90% | :interrobang:
+CuteOne          | Full          | 7.1.5 |    90% | :interrobang:
 
 ### Mage
 
@@ -199,7 +200,7 @@ dbtftw | Inactive | 7.1.5 |   100% | :interrobang:
 
 author | support | patch | status |     raidable?
 :----- | :-----: | :---: | -----: | :----------------:
-Kuukuu |  Full   | 7.1.5 |    80% | :heavy_check_mark:
+Kuukuu |  Full   | 7.2   |    90% | :white_check_mark:
 
 - Mistweaver
 
@@ -212,7 +213,7 @@ Lyloloq  |   Full   | 7.1.5 |   100% | :white_check_mark:
 
 author  | support | patch | status |     raidable?
 :------ | :-----: | :---: | -----: | :----------------:
-CuteOne |  Full   | 7.1.5 |   100% | :white_check_mark:
+CuteOne |  Full   | 7.2   |   100% | :white_check_mark:
 
 ### Paladin
 
@@ -220,7 +221,7 @@ CuteOne |  Full   | 7.1.5 |   100% | :white_check_mark:
 
 author | support | patch | status | raidable?
 :----- | :-----: | :---: | -----: | :-------:
-Kuukuu |  Full   | 7.1.5 |    30% |    :x:
+Kuukuu |  Full   | 7.2   |    80% |    :heavy_check_mark:
 
 - Protection
 
@@ -253,7 +254,7 @@ Svs    |  Full   | 7.1.5 |    100% | :white_check_mark:
 
 author           |    support    | patch | status | raidable?
 :--------------- | :-----------: | :---: | -----: | :-------:
-Cpoworks/CuteOne | Sporadic/Full | 7.1.5 |    70% |    :x:
+CuteOne          | Full          | 7.2   |    90% |    :x:
 
 ### Rogue
 
@@ -261,7 +262,7 @@ Cpoworks/CuteOne | Sporadic/Full | 7.1.5 |    70% |    :x:
 
 author  | support | patch | status |     raidable?
 :------ | :-----: | :---: | -----: | :----------------:
-CuteOne |  Full   | 7.1.5 |   100% | :white_check_mark:
+CuteOne |  Full   | 7.2   |   90%  | :interrobang:
 
 - Outlaw
 
@@ -283,7 +284,7 @@ Vilt    | Limited | 7.1.5 |   100% | :white_check_mark:
 
 author  | support | patch | status |   raidable?
 :------ | :-----: | :---: | -----: | :-----------:
-CuteOne |  Full   | 7.1.5 |   100% | :interrobang:
+CuteOne |  Full   | 7.2   |   100% | :interrobang:
 
 - Enhancement
 
@@ -307,9 +308,9 @@ CuteOne |  Full   | 7.1.5 |   100% | :white_check_mark:
 
 - Demonology
 
-author  | support | patch | status |     raidable?
-:------ | :-----: | :---: | -----: | :----------------:
-CuteOne |  Full   | 7.1.5 |   100% | :white_check_mark:
+author          | support | patch | status |     raidable?
+:-------------- | :-----: | :---: | -----: | :----------------:
+CuteOne/ Kuukuu |  Full   | 7.2 |   100% | :white_check_mark:
 
 - Destruction
 

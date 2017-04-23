@@ -1,12 +1,13 @@
-## Interface: 70100
+## Interface: 70200
 ## Title: |cffa330c9BadRotations
 ## Notes: |cffa330c9By CuteOne.
 ## Author: CuteOne
-## Version: 1.5.3
+## Version: 1.6.7
 ## SavedVariablesPerCharacter: brdata, dungeondata, raiddata
 
 BadRotations.lua
 bindings.xml
+misc.xml
 
 ## System
 
@@ -79,6 +80,7 @@ System\UI\Windows\Debug.lua
 System\UI\Windows\Healing.lua
 System\UI\Windows\Help.lua
 System\UI\Windows\Profile.lua
+System\UI\Windows\Settings.lua
 
 ## Custom Functions
 
@@ -126,11 +128,13 @@ Rotations\Hunter\Marksmanship\MarksmanshipCpoworks.lua
 Rotations\Hunter\Survival\SurvivalCpoworks.lua
 ## Mage ---------------------------------------------------
 
-Rotations\Mage\Arcane\ArcaneDBT.lua
+Rotations\Mage\Arcane\ArcaneCuteOne.lua
 
 Rotations\Mage\Fire\FireCuteOne.lua
 
 Rotations\Mage\Frost\FrostCuteOne.lua
+
+Rotations\Mage\Frost\FrostLyLoLoq.lua
 
 ## Monk ---------------------------------------------------
 
